@@ -1,8 +1,10 @@
 // ChatService.js
 import axios from 'axios';
+import secrets from './apis';
 
+
+const API_KEY = secrets.API_KEY
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
-const API_KEY = '****';
 
 
 async function chatWithGemini(userMessage) {

@@ -1,0 +1,144 @@
+import json
+import base64
+import requests
+from PIL import Image
+
+# Load and resize the image
+image_path = "image.jpg"
+img = Image.open(image_path)
+resized_img = img.resize((512, int(img.height * 512 / img.width)))
+
+# Save the resized image to a temporary file
+temp_image_path = "resized_image.jpg"
+resized_img.save(temp_image_path)
+resized_img
+
+
+# Encode the resized image in base64
+with open(temp_image_path, "rb") as image_file:
+    encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
+encoded_image
+
+
+# Create the JSON request
+request_data = {
+    "contents": [
+        {
+            "parts": [
+                {"text": "What is this picture?"},
+                {
+                    "inline_data": {
+                        "mime_type": "image/jpeg",
+                        "data": encoded_image
+                    }
+                }
+            ]
+        }
+    ]
+}
+
+# Write the JSON request to a file
+with open('request.json', 'w') as json_file:
+    json.dump(request_data, json_file, indent=2)
+
+request_data
+
+# Make the API request
+url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key={api_key}"
+headers = {'Content-Type': 'application/json'}
+response = requests.post(url, headers=headers, json=request_data)
+
+response_json = response.json()
+generated_text = response_json["candidates"][0]["content"]["parts"][0]["text"]
+print(f"Generated Text: {generated_text}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import requests
+import base64
+import json
+from PIL import Image
+from io import BytesIO
+
+def fetch_and_resize_image(image_url, display_size=(400, 400)):
+    # Fetch the image
+    response = requests.get(image_url)
+    img = Image.open(BytesIO(response.content))
+
+    # Resize and display the image
+    img = img.resize(display_size)
+    img.show()
+
+    # Resize for API request
+    resized_img = img.resize((512, int(img.height * 512 / img.width)))
+
+    return resized_img
+
+def encode_image_to_base64(image):
+    # Save the resized image to a temporary buffer
+    buffered = BytesIO()
+    image.save(buffered, format="JPEG")
+    return base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+def make_api_request(encoded_image, api_key, text="What is this picture?"):
+    # Prepare the request data
+    request_data = {
+        "contents": [
+            {
+                "parts": [
+                    {"text": text},
+                    {
+                        "inline_data": {
+                            "mime_type": "image/jpeg",
+                            "data": encoded_image
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+
+    # Make the request
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key={api_key}"
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(url, headers=headers, json=request_data)
+    
+    return response.json()
+
+# Main execution
+def main():
+    # Replace with your actual image URL and API key
+    image_url = "your_image_url"
+    api_key = "your_api_key"
+
+    resized_img = fetch_and_resize_image(image_url)
+    encoded_image = encode_image_to_base64(resized_img)
+    response_json = make_api_request(encoded_image, api_key)
+
+    # Extract and print the generated text
+    generated_text = response_json["candidates"][0]["content"]["parts"][0]["text"]
+    print(f"Generated Text: {generated_text}")
+
+if __name__ == "__main__":
+    main()

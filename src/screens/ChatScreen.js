@@ -1,6 +1,5 @@
-// ChatScreen.js
-import React, { useState, useRef } from 'react';
-import { View, TextInput, Button, Text, ScrollView, StyleSheet } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, ScrollView, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { chatWithGemini } from '../api/chatService';
 
 const ChatScreen = () => {
@@ -10,38 +9,29 @@ const ChatScreen = () => {
 
   const scrollViewRef = useRef();
 
+  useEffect(() => {
+    // Initial bot message
+    setMessages([{ text: "Hi there! How can I help you today?", isUser: false, timestamp: new Date() }]);
+  }, []);
+
   const handleSend = async () => {
     if (!message.trim()) return;
 
-    // Set loading state while waiting for the response
     setIsLoading(true);
+    const userMessage = { text: message, isUser: true, timestamp: new Date() };
 
     try {
       const geminiResponse = await chatWithGemini(message);
+      const botMessage = { text: geminiResponse, isUser: false, timestamp: new Date() };
 
-      // Add the user's message to the chat history
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: message, isUser: true },
-      ]);
-
-      // Add the Gemini's response to the chat history
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: geminiResponse, isUser: false },
-      ]);
-
-      // Scroll to the bottom of the chat
-      scrollViewRef.current.scrollToEnd();
+      setMessages(prevMessages => [...prevMessages, userMessage, botMessage]);
+      scrollViewRef.current?.scrollToEnd({ animated: true });
     } catch (error) {
       console.error('Error:', error);
-      // Handle the error appropriately
     } finally {
-      // Clear loading state after the response is received
       setIsLoading(false);
+      setMessage('');
     }
-
-    setMessage('');
   };
 
   return (
@@ -49,60 +39,102 @@ const ChatScreen = () => {
       <ScrollView
         style={styles.messagesList}
         ref={scrollViewRef}
-        onContentSizeChange={() => scrollViewRef.current.scrollToEnd()}>
+        onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+      >
         {messages.map((msg, index) => (
-          <Text
-            key={index}
-            style={[
-              styles.message,
-              msg.isUser ? styles.userMessage : styles.geminiMessage,
-            ]}>
-            {msg.text}
-          </Text>
+          <View key={index} style={[styles.message, msg.isUser ? styles.userMessage : styles.geminiMessage]}>
+            <Text style={[styles.messageText, msg.isUser ? styles.userMessageText : styles.geminiMessageText]}>
+              {msg.text}
+            </Text>
+            <Text style={styles.timestamp}>
+              {msg.timestamp.toLocaleTimeString()}
+            </Text>
+          </View>
         ))}
-        {isLoading && <Text>Loading...</Text>}
+        {isLoading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#0000ff" />
+          </View>
+        )}
       </ScrollView>
-      <TextInput
-        style={styles.input}
-        value={message}
-        onChangeText={setMessage}
-        placeholder="Type a message"
-        multiline
-      />
-      <Button title="Send" onPress={handleSend} />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={message}
+          onChangeText={setMessage}
+          placeholder="Type a message"
+          multiline
+        />
+        <TouchableOpacity onPress={handleSend} style={styles.sendButton} disabled={isLoading}>
+          <Text>Send</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  timestamp: {
+    fontSize: 12,
+    color: '#666',
+    paddingTop: 5,
+    alignSelf: 'flex-end',
+  },
+  loadingContainer: {
+    alignSelf: 'center',
+    margin: 10,
+  },
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
   },
   messagesList: {
     flex: 1,
-    marginBottom: 10,
   },
   message: {
     padding: 10,
-    borderRadius: 5,
-    marginBottom: 5,
+    borderRadius: 20,
+    marginVertical: 4,
+    maxWidth: '80%',
+    alignSelf: 'flex-start',
   },
   userMessage: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#DCF8C6',
     alignSelf: 'flex-end',
   },
   geminiMessage: {
-    backgroundColor: '#007bff',
-    color: '#fff',
-    alignSelf: 'flex-start',
+    backgroundColor: '#ECE5DD',
+  },
+  messageText: {
+    fontSize: 16,
+  },
+  userMessageText: {
+    color: '#000',
+  },
+  geminiMessageText: {
+    color: '#000',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    padding: 10,
   },
   input: {
-    borderWidth: 1,
-    borderColor: 'gray',
+    flex: 1,
+    borderRadius: 25,
     padding: 10,
-    marginBottom: 10,
-    maxHeight: 150,
+    backgroundColor: '#d4c8c7',
+    marginRight: 10,
+  },
+  sendButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 25,
+    backgroundColor: '#007bff',
+  },
+  loadingContainer: {
+    alignSelf: 'center',
+    margin: 10,
   },
 });
 
