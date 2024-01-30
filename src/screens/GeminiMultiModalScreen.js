@@ -10,18 +10,15 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
-import { MaterialIcons } from '@expo/vector-icons';
-
 import * as ImagePicker from 'expo-image-picker';
 import { chatWithGemini } from '../api/chatService';
 import { chatWithGeminiMultiModal } from '../api/GeminiMultiModalService';
 import * as FileSystem from 'expo-file-system';
-import { LogBox } from "react-native"
+import { LogBox } from "react-native";
 
-LogBox.ignoreAllLogs(true)
-
+LogBox.ignoreAllLogs(true);
 
 const GeminiMultiModal = () => {
   const [message, setMessage] = useState('');
@@ -30,9 +27,7 @@ const GeminiMultiModal = () => {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
   const scrollViewRef = useRef();
-
 
   const handleCaptureImage = async () => {
     try {
@@ -57,8 +52,6 @@ const GeminiMultiModal = () => {
       Alert.alert('Error', 'An error occurred while capturing the image.');
     }
   };
-
-  
 
   const handleSelectImage = async () => {
     try {
@@ -128,18 +121,17 @@ const GeminiMultiModal = () => {
   useEffect(() => {
     async function loadFonts() {
       await Font.loadAsync({
-        // Load MaterialIcons font
-        MaterialIcons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/MaterialIcons.ttf'),
+        MaterialCommunityIcons: require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf'),
       });
       setFontLoaded(true);
     }
 
     loadFonts();
   }, []);
+
   if (!fontLoaded) {
     return null; // Or a loading spinner if you wish
   }
-
 
   return (
     <View style={styles.container}>
@@ -148,15 +140,19 @@ const GeminiMultiModal = () => {
         ref={scrollViewRef}
         onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
       >
-        {/* Messages display */}
         {messages.map((msg, index) => (
           <View key={index} style={[styles.message, msg.isUser ? styles.userMessage : styles.geminiMessage]}>
+            {msg.isUser ? (
+              <MaterialCommunityIcons name="face-agent" size={24} color="#1e88e5" />
+            ) : (
+              <MaterialCommunityIcons name="robot" size={24} color="#1a73e8" />
+            )}
             {msg.imageUri && <Image source={{ uri: msg.imageUri }} style={styles.messageImage} />}
             <Text style={[styles.messageText, msg.isUser ? styles.userMessageText : styles.geminiMessageText]}>
               {msg.text}
-            <Text style={styles.timestamp}>
-                 {msg.timestamp ? msg.timestamp.toLocaleTimeString() : 'No timestamp'}
-            </Text>
+              <Text style={styles.timestamp}>
+                {msg.timestamp ? msg.timestamp.toLocaleTimeString() : 'No timestamp'}
+              </Text>
             </Text>
           </View>
         ))}
@@ -170,7 +166,6 @@ const GeminiMultiModal = () => {
         <TextInput
           style={styles.input}
           value={message}
-          // onChangeText={setMessage}
           onChangeText={(text) => {setMessage(text);}}
           placeholder="Type a message"
           placeholderTextColor="#121111"
@@ -179,22 +174,22 @@ const GeminiMultiModal = () => {
         />
         <View style={styles.buttonArea}>
           <TouchableOpacity onPress={handleSelectImage} style={styles.button}>
-            <Icon name="photo-library" size={24} color="#fff" />
+            <MaterialCommunityIcons name="camera-image" size={24} color="#e342f5" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleCaptureImage} style={styles.button}>
-            <Icon name="camera-alt" size={24} color="#fff" />
+            <MaterialCommunityIcons name="camera-front-variant" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleSend} style={styles.button} disabled={isLoading}>
-            <Icon name="send" size={24} color="#fff" />
+            <MaterialCommunityIcons name="send" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
       {selectedImage && <Image source={{ uri: selectedImage }} style={styles.previewImage} />}
-      </View>
-
-
+    </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -209,14 +204,36 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 5,
     padding: 10,
-    borderRadius: 15,
+    borderRadius: 20,
     maxWidth: '80%',
-    backgroundColor: '#ffffff', // Light background for message bubbles
-    shadowColor: '#000', // Shadow for a subtle depth effect
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    alignItems: 'center', // Align items in a row
+  },
+  inputArea: {
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    padding: 10,
+    flexDirection: 'row', // Align input and buttons in a row
+    alignItems: 'center', // Vertically center items
+  },
+  buttonArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '30%', // Adjust width as needed
+  },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 50, // Circular buttons
+    backgroundColor: '#1e88e5',
+    width: 40, // Fixed size for buttons
+    height: 40, // Fixed size for buttons
   },
   userMessage: {
     alignSelf: 'flex-end',
@@ -226,7 +243,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   messageText: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#333333', // Dark text for readability
   },
   userMessageText: {
@@ -242,7 +259,7 @@ const styles = StyleSheet.create({
     borderRadius: 15, // Rounded corners for images
   },
   timestamp: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#666',
     alignSelf: 'flex-end',
   },

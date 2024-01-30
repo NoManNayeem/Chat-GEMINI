@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, ScrollView, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { chatWithGemini } from '../api/chatService';
+import { View, ScrollView, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { chatWithGemini } from '../api/chatService'; // Adjust the import path as needed
+import * as Clipboard from 'expo-clipboard';
+import Markdown from 'react-native-markdown-renderer';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const ChatScreen = () => {
   const [message, setMessage] = useState('');
@@ -9,8 +12,13 @@ const ChatScreen = () => {
 
   const scrollViewRef = useRef();
 
+  const copyToClipboard = (text) => {
+    Clipboard.setString(text);
+    Alert.alert('Copied', 'Text copied to clipboard!');
+  };
+
+
   useEffect(() => {
-    // Initial bot message
     setMessages([{ text: "Hi there! How can I help you today?", isUser: false, timestamp: new Date() }]);
   }, []);
 
@@ -42,14 +50,18 @@ const ChatScreen = () => {
         onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
       >
         {messages.map((msg, index) => (
-          <View key={index} style={[styles.message, msg.isUser ? styles.userMessage : styles.geminiMessage]}>
-            <Text style={[styles.messageText, msg.isUser ? styles.userMessageText : styles.geminiMessageText]}>
-              {msg.text}
-            </Text>
-            <Text style={styles.timestamp}>
-              {msg.timestamp.toLocaleTimeString()}
-            </Text>
-          </View>
+          <TouchableOpacity key={index} onLongPress={() => copyToClipboard(msg.text)} style={[styles.message, msg.isUser ? styles.userMessage : styles.geminiMessage]}>
+            {!msg.isUser && <MaterialCommunityIcons name="robot-happy" size={24} color="#3f0857" />}
+            {msg.isUser && <MaterialCommunityIcons name="human-greeting-variant" size={24} color="#007bff" />}
+            <View style={styles.messageBubble}>
+              {msg.isUser ? (
+                <Text style={[styles.messageText, styles.userMessageText]}>{msg.text}</Text>
+              ) : (
+                <Markdown>{msg.text}</Markdown>
+              )}
+              <Text style={styles.timestamp}>{msg.timestamp.toLocaleTimeString()}</Text>
+            </View>
+          </TouchableOpacity>
         ))}
         {isLoading && (
           <View style={styles.loadingContainer}>
@@ -66,24 +78,15 @@ const ChatScreen = () => {
           multiline
         />
         <TouchableOpacity onPress={handleSend} style={styles.sendButton} disabled={isLoading}>
-          <Text>Send</Text>
+          <Text style={styles.sendButtonText}><MaterialCommunityIcons name="send-circle" size={24} color="white" /></Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
+
 const styles = StyleSheet.create({
-  timestamp: {
-    fontSize: 12,
-    color: '#666',
-    paddingTop: 5,
-    alignSelf: 'flex-end',
-  },
-  loadingContainer: {
-    alignSelf: 'center',
-    margin: 10,
-  },
   container: {
     flex: 1,
     padding: 10,
@@ -92,11 +95,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   message: {
+    flexDirection: 'row',
     padding: 10,
     borderRadius: 20,
     marginVertical: 4,
     maxWidth: '80%',
-    alignSelf: 'flex-start',
   },
   userMessage: {
     backgroundColor: '#DCF8C6',
@@ -104,6 +107,7 @@ const styles = StyleSheet.create({
   },
   geminiMessage: {
     backgroundColor: '#ECE5DD',
+    alignSelf: 'flex-start',
   },
   messageText: {
     fontSize: 16,
@@ -135,6 +139,16 @@ const styles = StyleSheet.create({
   loadingContainer: {
     alignSelf: 'center',
     margin: 10,
+  },
+  timestamp: {
+    fontSize: 12,
+    color: '#666',
+    paddingTop: 5,
+    alignSelf: 'flex-end',
+  },
+  messageBubble: {
+    flexShrink: 1,
+    marginLeft: 8,
   },
 });
 
