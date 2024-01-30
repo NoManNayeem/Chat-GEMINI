@@ -1,7 +1,7 @@
 // ../api/apis.js
 
 const secrets = {
-    API_KEY:  'AIzaSyAs9KuSSQ2XaBWjW8U-gcIMjwUKeyyGkX0',
+    API_KEY:  '****',
 
     secret2: "exampleSecret2",
     secret3: "exampleSecret3"
