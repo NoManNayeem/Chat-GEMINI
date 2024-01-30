@@ -177,7 +177,7 @@ const GeminiMultiModal = () => {
             <MaterialCommunityIcons name="camera-image" size={24} color="#e342f5" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleCaptureImage} style={styles.button}>
-            <MaterialCommunityIcons name="camera-front-variant" size={24} color="black" />
+            <MaterialCommunityIcons name="camera" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleSend} style={styles.button} disabled={isLoading}>
             <MaterialCommunityIcons name="send" size={24} color="#fff" />
