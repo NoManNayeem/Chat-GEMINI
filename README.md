@@ -24,16 +24,22 @@ Chat with Gemini is a simple React Native app that allows users to chat with a l
 
 Here are some screenshots of the app in action:
 
-<p align="center">
-  <img src="./screenshots/screaanshot (1).jpeg" alt="Screenshot 1" width="30%" />
-  <img src="./screenshots/screaanshot (2).jpeg" alt="Screenshot 2" width="30%" style="margin:0 1.5%;" />
-  <img src="./screenshots/screaanshot (3).jpeg" alt="Screenshot 3" width="30%" />
-</p>
-<p align="center">
-  <img src="./screenshots/screaanshot (4).jpeg" alt="Screenshot 4" width="30%" />
-  <img src="./screenshots/screaanshot (5).jpeg" alt="Screenshot 5" width="30%" style="margin:0 1.5%;" />
-  <img src="./screenshots/screaanshot (6).jpeg" alt="Screenshot 6" width="30%" />
-</p>
+<!-- Enhanced Screenshots Presentation -->
+<div  align="center" style="background-color: #333; padding: 20px;">
+  <!-- Row 1 of Screenshots -->
+  <img src="./screenshots/screaanshot (1).jpeg" alt="Screenshot 1" width="30%" style="margin: 0 1%;">
+  <img src="./screenshots/screaanshot (2).jpeg" alt="Screenshot 2" width="30%" style="margin: 0 1%;">
+  <img src="./screenshots/screaanshot (3).jpeg" alt="Screenshot 3" width="30%" style="margin: 0 1%;">
+
+  <!-- Spacing between rows -->
+  <div style="height: 20px;"></div>
+
+  <!-- Row 2 of Screenshots -->
+  <img src="./screenshots/screaanshot (4).jpeg" alt="Screenshot 4" width="30%" style="margin: 0 1%;">
+  <img src="./screenshots/screaanshot (5).jpeg" alt="Screenshot 5" width="30%" style="margin: 0 1%;">
+  <img src="./screenshots/screaanshot (6).jpeg" alt="Screenshot 6" width="30%" style="margin: 0 1%;">
+</div>
+
 
 
 
