@@ -20,6 +20,18 @@ Chat with Gemini is a simple React Native app that allows users to chat with a l
 1. Enter a message in the input field and press 'Send' to send it to Gemini.
 2. Gemini's response will appear in the chat interface.
 
+## Screenshots
+
+Here are some screenshots of the app in action:
+
+![Screenshot 1](./screenshots/screaanshot%20(1).jpeg)
+![Screenshot 2](./screenshots/screaanshot%20(2).jpeg)
+![Screenshot 3](./screenshots/screaanshot%20(3).jpeg)
+![Screenshot 4](./screenshots/screaanshot%20(4).jpeg)
+![Screenshot 5](./screenshots/screaanshot%20(5).jpeg)
+![Screenshot 6](./screenshots/screaanshot%20(6).jpeg)
+
+
 ## Dependencies
 
 - React Native
