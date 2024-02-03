@@ -25,14 +25,14 @@ Chat with Gemini is a simple React Native app that allows users to chat with a l
 Here are some screenshots of the app in action:
 
 <p align="center">
-  <img src="./screenshots/screenshot (1).jpeg" alt="Screenshot 1" width="30%" />
-  <img src="./screenshots/screenshot (2).jpeg" alt="Screenshot 2" width="30%" style="margin:0 1.5%;" />
-  <img src="./screenshots/screenshot (3).jpeg" alt="Screenshot 3" width="30%" />
+  <img src="./screenshots/screaanshot (1).jpeg" alt="Screenshot 1" width="30%" />
+  <img src="./screenshots/screaanshot (2).jpeg" alt="Screenshot 2" width="30%" style="margin:0 1.5%;" />
+  <img src="./screenshots/screaanshot (3).jpeg" alt="Screenshot 3" width="30%" />
 </p>
 <p align="center">
-  <img src="./screenshots/screenshot (4).jpeg" alt="Screenshot 4" width="30%" />
-  <img src="./screenshots/screenshot (5).jpeg" alt="Screenshot 5" width="30%" style="margin:0 1.5%;" />
-  <img src="./screenshots/screenshot (6).jpeg" alt="Screenshot 6" width="30%" />
+  <img src="./screenshots/screaanshot (4).jpeg" alt="Screenshot 4" width="30%" />
+  <img src="./screenshots/screaanshot (5).jpeg" alt="Screenshot 5" width="30%" style="margin:0 1.5%;" />
+  <img src="./screenshots/screaanshot (6).jpeg" alt="Screenshot 6" width="30%" />
 </p>
 
 
